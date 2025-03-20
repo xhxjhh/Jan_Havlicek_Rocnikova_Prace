@@ -47,6 +47,13 @@ public class AttackScript : MonoBehaviour
 
             float defenseMultiplier = Random.Range(minDefenseMultiplier, maxDefenseMultiplier);
             damage = Mathf.Max(0, damage - (defenseMultiplier * targetStats.defense));
+
+            Debug.Log("Attacking with animation: " + animationName);
+        if (owner.GetComponent<Animator>() == null) 
+        {
+            Debug.LogError("Animator not found on: " + owner.name);
+        }
+        
             owner.GetComponent<Animator>().Play(animationName);
             targetStats.ReceiveDamage(Mathf.CeilToInt(damage));
             attackerStats.updateMagicFill(magicCost);

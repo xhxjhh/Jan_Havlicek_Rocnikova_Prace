@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,6 +60,16 @@ public class FighterStats : MonoBehaviour, IComparable
 
     public void ReceiveDamage(float damage)
     {
+
+ if (animator == null) 
+    {
+        Debug.LogError("Animator is not assigned to " + gameObject.name);
+    }
+    else
+    {
+        Debug.Log("Animator layer count: " + animator.layerCount);
+    }
+
         health = health - damage;
         animator.Play("Damage");
 

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,6 +41,9 @@ public class GameController : MonoBehaviour
         battleText.gameObject.SetActive(false);
         FighterStats currentFighterStats = fighterStats[0];
         fighterStats.Remove(currentFighterStats);
+
+Debug.Log("Next turn for: " + currentFighterStats.gameObject.name);
+
         if (!currentFighterStats.GetDead())
         {
             GameObject currentUnit = currentFighterStats.gameObject;
@@ -49,15 +52,19 @@ public class GameController : MonoBehaviour
             fighterStats.Sort();
             if(currentUnit.tag == "Hero")
             {
+                Debug.Log("Hero's turn");
                 this.battleMenu.SetActive(true);
             } else
             {
+                Debug.Log("Enemy's turn");
                 this.battleMenu.SetActive(false);
                 string attackType = Random.Range(0, 2) == 1 ? "melee" : "range";
+                Debug.Log("Enemy selected attack: " + attackType);
                 currentUnit.GetComponent<FighterAction>().SelectAttack(attackType);
             }
         } else
         {
+            Debug.Log("Unit is dead. Skipping turn.");
             NextTurn();
         }
     }

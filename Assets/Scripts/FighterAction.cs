@@ -1,8 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public class FighterAction : MonoBehaviour
 {
@@ -27,6 +26,9 @@ public class FighterAction : MonoBehaviour
     }
     public void SelectAttack(string btn)
     {
+
+Debug.Log("Selected attack: " + btn);
+
         GameObject victim = hero;
         if (tag == "Hero")
         {
@@ -34,11 +36,12 @@ public class FighterAction : MonoBehaviour
         }
         if (btn.CompareTo("melee") == 0)
         {
+            Debug.Log("Melee attack on: " + victim.name);
             meleePrefab.GetComponent<AttackScript>().Attack(victim);
-            
 
         } else if (btn.CompareTo("range") == 0)
         {
+            Debug.Log("Range attack on: " + victim.name);
             rangePrefab.GetComponent<AttackScript>().Attack(victim);
         } else
         {
