@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Transactions;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.SceneManagement;
+
 
 public class GameController : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class GameController : MonoBehaviour
     private GameObject battleMenu;
 
     public Text battleText;
+
+    public bool isBusy = false;
+
 
     private void Awake()
     {
@@ -53,7 +58,9 @@ Debug.Log("Next turn for: " + currentFighterStats.gameObject.name);
             if(currentUnit.tag == "Hero")
             {
                 Debug.Log("Hero's turn");
-                this.battleMenu.SetActive(true);
+                battleMenu.SetActive(true);
+                
+
             } else
             {
                 Debug.Log("Enemy's turn");
@@ -63,9 +70,38 @@ Debug.Log("Next turn for: " + currentFighterStats.gameObject.name);
                 currentUnit.GetComponent<FighterAction>().SelectAttack(attackType);
             }
         } else
-        {
-            Debug.Log("Unit is dead. Skipping turn.");
-            NextTurn();
-        }
+{
+    Debug.Log("Unit is dead. Skipping turn.");
+
+    // Check if the Hero or Enemy still exist in the scene
+    GameObject hero = GameObject.FindGameObjectWithTag("Hero");
+    GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+
+    if (hero == null && enemy == null)
+    {
+        EndGame("Both units are gone?");
     }
+    else if (hero == null)
+    {
+        EndGame("You Lost...");
+    }
+    else if (enemy == null)
+    {
+        EndGame("You Won!");
+    }
+    else
+    {
+        NextTurn(); // Proceed to next fighter
+    }
+}
+
+
+    }
+
+    private void EndGame(string result)
+    {
+        PlayerPrefs.SetString("GameResult", result);
+        SceneManager.LoadScene("GameOverScene");
+    }
+
 }

@@ -24,10 +24,15 @@ public class FighterAction : MonoBehaviour
         hero = GameObject.FindGameObjectWithTag("Hero");
         enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
+
+    
     public void SelectAttack(string btn)
     {
 
-Debug.Log("Selected attack: " + btn);
+        GameObject.Find("GameControllerObject").GetComponent<GameController>().isBusy = true;
+
+
+        Debug.Log("Selected attack: " + btn);
 
         GameObject victim = hero;
         if (tag == "Hero")
@@ -43,9 +48,30 @@ Debug.Log("Selected attack: " + btn);
         {
             Debug.Log("Range attack on: " + victim.name);
             rangePrefab.GetComponent<AttackScript>().Attack(victim);
-        } else
+        } else if (btn.CompareTo("run") == 0)
         {
-            Debug.Log("Run");
+            Debug.Log("Run card used: Healing + Mana cost");
+
+            FighterStats stats = GetComponent<FighterStats>();
+
+            float healAmount = 0.15f * stats.GetStartHealth();
+            float manaCost = 0.20f * stats.GetStartMagic();
+
+            if (stats.magic >= manaCost)
+            {
+                if (stats.GetComponent<Animator>() != null)
+                {
+                    stats.GetComponent<Animator>().Play("Heal"); // 👈 animation call
+                }
+
+                stats.ReceiveHealing(healAmount);
+                stats.updateMagicFill(manaCost);
+            }
+            else
+            {
+                Debug.Log("Not enough mana to use Run card!");
+                GameObject.Find("GameControllerObject").GetComponent<GameController>().NextTurn();
+            }
         }
     }
 }

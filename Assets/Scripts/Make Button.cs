@@ -18,13 +18,22 @@ public class MakeButton : MonoBehaviour
 
     private void AttachCallback(string btn)
     {
+        var controller = GameObject.Find("GameControllerObject").GetComponent<GameController>();
+        if (controller.isBusy)
+        {
+            Debug.Log("Game is busy. Wait until action finishes.");
+            return;
+        }
+
         if (btn.CompareTo("MeleeBtn") == 0)
         {
             hero.GetComponent<FighterAction>().SelectAttack("melee");
-        } else if (btn.CompareTo("RangeBtn") == 0)
+        }
+        else if (btn.CompareTo("RangeBtn") == 0)
         {
             hero.GetComponent<FighterAction>().SelectAttack("range");
-        } else
+        }
+        else
         {
             hero.GetComponent<FighterAction>().SelectAttack("run");
         }

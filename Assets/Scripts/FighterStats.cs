@@ -24,8 +24,8 @@ public class FighterStats : MonoBehaviour, IComparable
     public float speed;
     public float experience;
 
-    private float startHealth;
-    private float startMagic;
+    public float startHealth;
+    public float startMagic;
 
     [HideInInspector]
     public int nextActTurn;
@@ -56,6 +56,16 @@ public class FighterStats : MonoBehaviour, IComparable
         startMagic = magic;
 
         GameControllerObj = GameObject.Find("GameControllerObject");
+    }
+
+    public float GetStartHealth()
+    {
+    return startHealth;
+    }
+
+    public float GetStartMagic()
+    {
+    return startMagic;
     }
 
     public void ReceiveDamage(float damage)
@@ -94,6 +104,18 @@ public class FighterStats : MonoBehaviour, IComparable
         Invoke("ContinueGame", 2);
     }
 
+    public void ReceiveHealing(float amount)
+    {
+    health = Mathf.Min(health + amount, startHealth);
+    xNewHealthScale = healthScale.x * (health / startHealth);
+    healthFill.transform.localScale = new Vector2(xNewHealthScale, healthScale.y);
+
+    GameControllerObj.GetComponent<GameController>().battleText.gameObject.SetActive(true);
+    GameControllerObj.GetComponent<GameController>().battleText.text = "+" + Mathf.CeilToInt(amount).ToString();
+
+    Invoke("ContinueGame", 2);
+    }
+
     public void updateMagicFill(float cost)
     {
         if(cost > 0)
@@ -111,6 +133,7 @@ public class FighterStats : MonoBehaviour, IComparable
 
     void ContinueGame()
     {
+        GameObject.Find("GameControllerObject").GetComponent<GameController>().isBusy = false;
         GameObject.Find("GameControllerObject").GetComponent<GameController>().NextTurn();
     }
     public void CalculateNextTurn(int currentTurn)
