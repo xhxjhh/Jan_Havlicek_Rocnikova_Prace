@@ -11,7 +11,7 @@ public class SceneController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        mainMenu = FindObjectOfType<MenuController>();
+        mainMenu = FindFirstObjectByType<MenuController>();
 	}
 	
 	// Update is called once per frame

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,18 +44,46 @@ public class FighterStats : MonoBehaviour, IComparable
 
     private GameObject GameControllerObj;
 
+    public GameObject GetHealthFill()
+    {
+        return healthFill;
+    }
+
+    public GameObject GetMagicFill()
+    {
+        return magicFill;
+    }
+
+    public void SetBars(GameObject newHealthFill, GameObject newMagicFill)
+    {
+        healthFill = newHealthFill;
+        magicFill = newMagicFill;
+        InitBars();
+    }
+
     void Awake()
     {
-        healthTransform = healthFill.GetComponent<RectTransform>();
-        healthScale = healthFill.transform.localScale;
-
-        magicTransform = magicFill.GetComponent<RectTransform>();
-        magicScale = magicFill.transform.localScale;
+        InitBars();
 
         startHealth = health;
         startMagic = magic;
 
         GameControllerObj = GameObject.Find("GameControllerObject");
+    }
+
+    void InitBars()
+    {
+        if (healthFill != null)
+        {
+            healthTransform = healthFill.GetComponent<RectTransform>();
+            healthScale = healthFill.transform.localScale;
+        }
+
+        if (magicFill != null)
+        {
+            magicTransform = magicFill.GetComponent<RectTransform>();
+            magicScale = magicFill.transform.localScale;
+        }
     }
 
     public float GetStartHealth()
@@ -68,8 +96,9 @@ public class FighterStats : MonoBehaviour, IComparable
     return startMagic;
     }
 
-    public void ReceiveDamage(float damage)
+    public void ReceiveDamage(int damage, bool isCrit)
     {
+        string unitTag = gameObject.tag;
 
  if (animator == null) 
     {
@@ -89,8 +118,18 @@ public class FighterStats : MonoBehaviour, IComparable
         {
             dead = true;
             gameObject.tag = "Dead";
+            if (GameControllerObj != null)
+            {
+                var controller = GameControllerObj.GetComponent<GameController>();
+                if (controller != null)
+                {
+                    controller.NotifyUnitDied(unitTag);
+                }
+            }
+
             Destroy(healthFill);
             Destroy(gameObject);
+            return;
         } else if (damage > 0)
         {
             xNewHealthScale = healthScale.x * (health / startHealth);
@@ -99,7 +138,7 @@ public class FighterStats : MonoBehaviour, IComparable
         if(damage > 0)
         {
             GameControllerObj.GetComponent<GameController>().battleText.gameObject.SetActive(true);
-            GameControllerObj.GetComponent<GameController>().battleText.text = damage.ToString();
+            GameControllerObj.GetComponent<GameController>().battleText.text = isCrit ? (damage.ToString() + "!!") : damage.ToString();
         }
         Invoke("ContinueGame", 2);
     }
@@ -122,6 +161,16 @@ public class FighterStats : MonoBehaviour, IComparable
         {
             magic = magic - cost;
             xNewMagicScale = magicScale.x * (magic / startMagic);
+            magicFill.transform.localScale = new Vector2(xNewMagicScale, magicScale.y);
+        }
+    }
+
+    public void ModifyMagic(float delta)
+    {
+        magic = Mathf.Clamp(magic + delta, 0f, startMagic);
+        xNewMagicScale = magicScale.x * (magic / startMagic);
+        if (magicFill != null)
+        {
             magicFill.transform.localScale = new Vector2(xNewMagicScale, magicScale.y);
         }
     }
