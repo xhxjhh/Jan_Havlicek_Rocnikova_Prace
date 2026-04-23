@@ -55,7 +55,20 @@ public class HeroSelectionMenu : MonoBehaviour
 
     public void StartGame()
     {
+        PlayerPrefs.SetInt("StageIndex", 1);
+        PlayerPrefs.Save();
         SceneManager.LoadScene(SceneNames.Battle);
+    }
+
+    public void ContinueGame()
+    {
+        if (GameController.HasSave())
+        {
+            GameController.ContinueFromSave();
+            return;
+        }
+
+        StartGame();
     }
 
     void Refresh()
@@ -83,4 +96,3 @@ public class HeroSelectionMenu : MonoBehaviour
         }
     }
 }
-

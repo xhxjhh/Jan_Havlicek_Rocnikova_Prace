@@ -49,6 +49,7 @@ public class FighterAction : MonoBehaviour
             var controller = controllerObj.GetComponent<GameController>();
             if (controller != null)
             {
+                controller.OnPlayerActionStarted();
                 controller.isBusy = true;
             }
         }
@@ -125,6 +126,7 @@ public class FighterAction : MonoBehaviour
             return;
         }
 
+        controller.OnPlayerActionStarted();
         controller.isBusy = true;
 
         FighterStats stats = GetComponent<FighterStats>();

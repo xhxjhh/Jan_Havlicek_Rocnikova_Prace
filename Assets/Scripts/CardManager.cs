@@ -85,4 +85,64 @@ public class CardManager : MonoBehaviour
             card.GetComponent<CardUI>().Setup(drawn);
         }
     }
+
+    public void RestoreHand(string[] cardNames)
+    {
+        foreach (Transform child in handPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        hand.Clear();
+
+        if (cardNames == null || cardNames.Length == 0)
+        {
+            return;
+        }
+
+        var lookup = new Dictionary<string, CardData>();
+        foreach (var card in deck)
+        {
+            if (card == null)
+            {
+                continue;
+            }
+
+            var n = (card.cardName ?? "").Trim().ToLowerInvariant();
+            if (!lookup.ContainsKey(n))
+            {
+                lookup[n] = card;
+            }
+        }
+
+        foreach (var raw in cardNames)
+        {
+            var key = (raw ?? "").Trim().ToLowerInvariant();
+            if (!lookup.TryGetValue(key, out var data) || data == null)
+            {
+                continue;
+            }
+
+            hand.Add(data);
+
+            GameObject card = Instantiate(cardPrefab, handPanel);
+            card.transform.localScale = Vector3.one;
+
+            var rect = card.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.localScale = Vector3.one;
+            }
+
+            var layout = card.GetComponent<LayoutElement>();
+            if (layout == null)
+            {
+                layout = card.AddComponent<LayoutElement>();
+            }
+            layout.preferredWidth = cardPreferredSize.x;
+            layout.preferredHeight = cardPreferredSize.y;
+
+            card.GetComponent<CardUI>().Setup(data);
+        }
+    }
 }

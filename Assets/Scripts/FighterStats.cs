@@ -61,6 +61,37 @@ public class FighterStats : MonoBehaviour, IComparable
         InitBars();
     }
 
+    public void ApplyStatMultiplier(float multiplier)
+    {
+        if (multiplier <= 0f || Mathf.Approximately(multiplier, 1f))
+        {
+            return;
+        }
+
+        health *= multiplier;
+        startHealth *= multiplier;
+        magic *= multiplier;
+        startMagic *= multiplier;
+        melee *= multiplier;
+        magicRange *= multiplier;
+        defense *= multiplier;
+    }
+
+    public void RefreshBars()
+    {
+        if (healthFill != null && startHealth > 0f)
+        {
+            xNewHealthScale = healthScale.x * (health / startHealth);
+            healthFill.transform.localScale = new Vector2(xNewHealthScale, healthScale.y);
+        }
+
+        if (magicFill != null && startMagic > 0f)
+        {
+            xNewMagicScale = magicScale.x * (magic / startMagic);
+            magicFill.transform.localScale = new Vector2(xNewMagicScale, magicScale.y);
+        }
+    }
+
     void Awake()
     {
         InitBars();

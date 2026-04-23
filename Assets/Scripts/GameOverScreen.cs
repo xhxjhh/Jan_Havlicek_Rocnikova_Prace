@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameOverScreen : MonoBehaviour
 {
+    private const string StageIndexKey = "StageIndex";
+
     public TMP_Text resultText;
     public Text resultTextLegacy;
 
@@ -50,6 +52,52 @@ public class GameOverScreen : MonoBehaviour
 
     public void ReturnToMenu()
     {
+        PlayerPrefs.SetInt(StageIndexKey, 1);
+        PlayerPrefs.Save();
         SceneManager.LoadScene(SceneNames.MainMenu);
+    }
+
+    public void NextStage()
+    {
+        string result = PlayerPrefs.GetString("GameResult", "Game Over");
+        if (result != "You Won!")
+        {
+            PlayerPrefs.SetInt(StageIndexKey, 1);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(SceneNames.MainMenu);
+            return;
+        }
+
+        int stageIndex = Mathf.Max(1, PlayerPrefs.GetInt(StageIndexKey, 1));
+        stageIndex++;
+        PlayerPrefs.SetInt(StageIndexKey, stageIndex);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(SceneNames.Battle);
+    }
+
+    public void SaveBetweenStages()
+    {
+        string result = PlayerPrefs.GetString("GameResult", "Game Over");
+        if (result != "You Won!")
+        {
+            return;
+        }
+
+        GameController.SaveBetweenStages();
+
+        if (resultText != null)
+        {
+            if (!resultText.text.Contains("Uloženo"))
+            {
+                resultText.text += "\nUloženo";
+            }
+        }
+        else if (resultTextLegacy != null)
+        {
+            if (!resultTextLegacy.text.Contains("Uloženo"))
+            {
+                resultTextLegacy.text += "\nUloženo";
+            }
+        }
     }
 }
