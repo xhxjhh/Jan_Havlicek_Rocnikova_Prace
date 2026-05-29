@@ -119,10 +119,10 @@ TextureImporter:
       name: WildCard_0
       rect:
         serializedVersion: 2
-        x: 86
-        y: 31
-        width: 759
-        height: 973
+        x: 159
+        y: 37
+        width: 642
+        height: 964
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,33 +137,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: WildCard_1
-      rect:
-        serializedVersion: 2
-        x: 152
-        y: 735
-        width: 6
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bfd04b38d4ea929d0800000000000000
-      internalID: -2798514045488722437
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7e30d2b165b1bbb418d9a86608133174
     internalID: 0
     vertices: []
     indices: 
@@ -172,7 +150,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      WildCard_0: 1811988147019002877
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
